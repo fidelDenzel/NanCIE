@@ -75,6 +75,14 @@ else :
         time.sleep(1)
         pio.output(pin_LEN, pio.LOW)
         pio.output(pin_REN, pio.LOW)
+
+        motor2_Rpwm.ChangeDutyCycle(int_part)
+        time.sleep(2)
+        pio.output(pin_LEN2, pio.HIGH)
+        pio.output(pin_REN2, pio.HIGH)
+        time.sleep(1)
+        pio.output(pin_LEN2, pio.LOW)
+        pio.output(pin_REN2, pio.LOW)
       
     elif (str_part == "R") :
         print ("Kanan deh " + str(speed) + " m/s")
@@ -85,6 +93,14 @@ else :
         time.sleep(1)
         pio.output(pin_LEN, pio.LOW)
         pio.output(pin_REN, pio.LOW)
+
+        motor2_Lpwm.ChangeDutyCycle(int_part)
+        time.sleep(2)
+        pio.output(pin_LEN2, pio.HIGH)
+        pio.output(pin_REN2, pio.HIGH)
+        time.sleep(1)
+        pio.output(pin_LEN2, pio.LOW)
+        pio.output(pin_REN2, pio.LOW)
  
     elif (str_part == "F") :
         print ("Maju hei " + str(speed) + " m/s")
