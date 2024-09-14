@@ -1,6 +1,7 @@
 import pygame
 import lgpio
 import time
+import math
 
 # Initialize Pygame
 pygame.init()
@@ -11,6 +12,9 @@ screen = pygame.display.set_mode((100, 100))
 # Initialize GPIO
 BTS7960 = lgpio.gpiochip_open(0)
 FREQ = 100
+max_omega = (1/0.03) * 2*math.pi# radiant per second
+wheel_r = 0.1
+max_v = max_omega * wheel_r
 
 # Motor Pins
 pin_LEN = 22
@@ -52,7 +56,7 @@ lgpio.gpio_write(BTS7960, pin_REN2, 1)
 
 # Initialize speed adjustments
 motor1_speed_adjustment = 1.0  # Adjustment factor for Motor 1
-motor2_speed_adjustment = 1.0  # Adjustment factor for Motor 2
+motor2_speed_adjustment = 1.0 # Adjustment factor for Motor 2
 
 # Function to stop the robot
 def stop_robot():
@@ -90,28 +94,28 @@ def move_robot(direction, speed):
     motor2_speed = speed * motor2_speed_adjustment
 
     if direction == 'forward':
-        print("Moving forward at", speed, "m/s")
-        lgpio.tx_pwm(BTS7960, pin_LPWM, FREQ, motor1_speed)
+        print("Moving forward at", (speed/100) * max_v, "m/s")
+        lgpio.t9x_pwm(BTS7960, pin_LPWM, FREQ, motor1_speed)
         lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, motor2_speed)
     elif direction == 'backward':
-        print("Moving backward at", speed, "m/s")
+        print("Moving backward at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_RPWM, FREQ, motor1_speed)
         lgpio.tx_pwm(BTS7960, pin_LPWM2, FREQ, motor2_speed)
     elif direction == 'left':
-        print("Turning left at", speed, "m/s")
+        print("Turning left at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_LPWM, FREQ, motor1_speed)
     elif direction == 'right':
-        print("Turning right at", speed, "m/s")
+        print("Turning right at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, motor2_speed)
     elif direction == 'spin':
-        print("360 Dance Move at", speed, "m/s")
+        print("360 Dance Move at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, motor2_speed) 
         lgpio.tx_pwm(BTS7960, pin_RPWM, FREQ, motor1_speed)   
 
 # Initialize speed
-current_speed = 100  # Default speed
+current_speed = 10  # Default speed
 
-# Main loop
+# Main loopbbbbby
 try:
     running = True
     while running:
@@ -146,17 +150,35 @@ try:
                     print("Motor 2 speed adjustment:", motor2_speed_adjustment)
                     adjust_motor_speeds(current_speed)
                 elif event.key == pygame.K_1:
-                    current_speed = 5   # Speed level 1
-                    print("Speed set to 5")
+                    current_speed = 10   # Speed level 1
+                    print("Speed set to 10%")
                 elif event.key == pygame.K_2:
-                    current_speed = 10  # Speed level 2
-                    print("Speed set to 10")
+                    current_speed = 20  # Speed level 2
+                    print("Speed set to 20%")
                 elif event.key == pygame.K_3:
-                    current_speed = 20  # Speed level 3
-                    print("Speed set to 20")
+                    current_speed = 30  # Speed level 3
+                    print("Speed set to 30%")
                 elif event.key == pygame.K_4:
-                    current_speed = 100  # Speed level 4
-                    print("Speed set to 100")    
+                    current_speed = 40  # Speed level 4
+                    print("Speed set to 40%")    
+                elif event.key == pygame.K_5:
+                    current_speed = 50   # Speed level 5
+                    print("Speed set to 50%")
+                elif event.key == pygame.K_6:
+                    current_speed = 60  # Speed level 6
+                    print("Speed set to 60%")
+                elif event.key == pygame.K_7:
+                    current_speed = 70  # Speed level 7
+                    print("Speed set to 70%")
+                elif event.key == pygame.K_8:
+                    current_speed = 80  # Speed level 8
+                    print("Speed set to 80") 
+                elif event.key == pygame.K_9:
+                    current_speed = 90  # Speed level 9
+                    print("Speed set to 90%")
+                elif event.key == pygame.K_0:
+                    current_speed = 100  # Speed level 10
+                    print("Speed set to 100") 
             elif event.type == pygame.KEYUP:
                 stop_robot()
 
