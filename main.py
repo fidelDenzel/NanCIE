@@ -2,11 +2,10 @@ import PID
 import GyrometerMPU6050 as gyNan
 import MotorInterface as gyMotor
 
-pid = PID.PIDController(0,0,0)
-mpu = gyNan.MPU_init(0x68)
+thetaPID = PID.PIDController(100,0,5)
+mpu = gyNan.MPU_init(0x69)
 
 # Main lobby
-
 # while True:
 # #Read Accelerometer raw value
 # acc_x = gyNan.read_raw_data(gyNan.ACCEL_XOUT_H)/16384.0
@@ -49,16 +48,25 @@ try:
             if event.type == gyMotor.pygame.QUIT:
                 running = False
             elif event.type == gyMotor.pygame.KEYDOWN:
+                outp = thetaPID.compute(0, Gz)
+                if outp < 0 : # if negative, robot must turn ccw
+                    gyMotor.move_robot('right',outp * current_speed)  #this s because output ranges from -1 to 1 due to complex numbers vector range
+
                 if event.key == gyMotor.pygame.K_UP:
                     gyMotor.move_robot('forward', current_speed)
+                
                 elif event.key == gyMotor.pygame.K_DOWN:
                     gyMotor.move_robot('backward', current_speed)
+                
                 elif event.key == gyMotor.pygame.K_LEFT:
                     gyMotor.move_robot('left', current_speed)
+                
                 elif event.key == gyMotor.pygame.K_RIGHT:
                     gyMotor.move_robot('right', current_speed)
+                
                 elif event.key == gyMotor.pygame.K_RETURN:
                     gyMotor.move_robot('spin', current_speed)    
+                
                 elif event.key >= 48 and event.key <= 57:
                     current_speed = (event.key - 48 ) * 10
                     if current_speed == 0:

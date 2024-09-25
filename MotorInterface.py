@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((100, 100))
 # Initialize GPIO
 BTS7960 = lgpio.gpiochip_open(0)
 FREQ = 100
-max_omega = (1/0.03) * 2*math.pi# radiant per second
+max_omega = (1/0.03) * 2 * math.pi # radiant per second
 wheel_r = 0.1
 max_v = max_omega * wheel_r
 
@@ -80,11 +80,11 @@ def measure_speed_difference():
 
     speed_motor1 = 100  # Example reading from an encoder or other sensor
     speed_motor2 = 100  # Example reading from an encoder or other sensor
-
+    
     return speed_motor1, speed_motor2
 
 # Function to adjust motor speeds manually
-def adjust_motor_speeds(target_speed):
+def adjust_motor_speeds(target_speed) :
     global motor1_speed_adjustment, motor2_speed_adjustment
 
     # Calculate new PWM duty cycle values
@@ -106,16 +106,20 @@ def move_robot(direction, speed):
         print("Moving forward at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_LPWM, FREQ, motor1_speed)
         lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, motor2_speed)
+    
     elif direction == 'backward':
         print("Moving backward at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_RPWM, FREQ, motor1_speed)
         lgpio.tx_pwm(BTS7960, pin_LPWM2, FREQ, motor2_speed)
+    
     elif direction == 'left':
         print("Turning left at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_LPWM, FREQ, motor1_speed)
+    
     elif direction == 'right':
         print("Turning right at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, motor2_speed)
+    
     elif direction == 'spin':
         print("360 Dance Move at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, motor2_speed) 
