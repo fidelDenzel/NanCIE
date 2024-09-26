@@ -2,30 +2,9 @@ import PID
 import GyrometerMPU6050 as gyNan
 import MotorInterface as gyMotor
 
-thetaPID = PID.PIDController(100,0,5)
+thetaPID = PID.PIDController(1,0,0)
 linePID = PID.PIDController(100,0,5)
 mpu = gyNan.MPU_init(0x69)
-
-# Main lobby
-# while True:
-# #Read Accelerometer raw value
-# acc_x = gyNan.read_raw_data(gyNan.ACCEL_XOUT_H)/16384.0
-# acc_y = gyNan.read_raw_data(gyNan.ACCEL_YOUT_H)/16384.0
-# acc_z = gyNan.read_raw_data(gyNan.ACCEL_ZOUT_H)/16384.0
-
-# #Read Gyroscope raw value
-# gyro_x = gyNan.read_raw_data(gyNan.GYRO_XOUT_H)/131.0
-# gyro_y = gyNan.read_raw_data(gyNan.GYRO_YOUT_H)/131.0
-# gyro_z = gyNan.read_raw_data(gyNan.GYRO_ZOUT_H)/131.0
-
-# #Full scale range +/- 250 degree/C as per sensitivity scale factor
-# Ax = acc_x/16384.0
-# Ay = acc_y/16384.0
-# Az = acc_z/16384.0
-
-# Gx = gyro_x/131.0
-# Gy = gyro_y/131.0
-# Gz = gyro_z/131.0
 
 try:
 
@@ -52,10 +31,11 @@ try:
                 
                 if event.key == gyMotor.pygame.K_b:
                     outp = thetaPID.compute(0, Gz) * 0.98 + thetaPID.compute(0,Ax) * 0.01 + thetaPID.compute(0,Ay) * 0.01
-                    if outp < 0 : # if negative, robot must turn ccw
-                        gyMotor.move_robot('right',outp * gyMotor.current_speed)  #this s because output ranges from -1 to 1 due to complex numbers vector range
-                    elif outp > 0 :
-                        gyMotor.move_robot('left',outp * gyMotor.current_speed)
+                    print("Gz - 0 = ",Gz,"output PID = ", int(outp * gyMotor.current_speed))
+                    # if outp < 0 : # if negative, robot must turn ccw
+                    #     gyMotor.move_robot('right',outp)  #this is because output ranges from -1 to 1 due to complex numbers vector range
+                    # elif outp > 0 :
+                    #     gyMotor.move_robot('left',outp)
 
                 if event.key == gyMotor.pygame.K_UP:
                     gyMotor.move_robot('forward', gyMotor.current_speed)
@@ -87,8 +67,8 @@ finally:
     print("Ending\n")
     gyMotor.stop_robot()
     gyMotor.lgpio.gpio_write(gyMotor.BTS7960, gyMotor.pin_LEN, 0)
-    gyMotor.lgpio.gpio_write(gyMotor.BTS7960, gyMotor.pin_REN, 0)
+    # gyMotor.lgpio.gpio_write(gyMotor.BTS7960, gyMotor.pin_REN, 0)
     gyMotor.lgpio.gpio_write(gyMotor.BTS7960, gyMotor.pin_LEN2, 0)
-    gyMotor.lgpio.gpio_write(gyMotor.BTS7960, gyMotor.pin_REN2, 0)
+    # gyMotor.lgpio.gpio_write(gyMotor.BTS7960, gyMotor.pin_REN2, 0)
     gyMotor.lgpio.gpiochip_close(gyMotor.BTS7960)
     gyMotor.pygame.quit()
