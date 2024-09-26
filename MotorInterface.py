@@ -30,6 +30,7 @@ pin_RPWM2 = 5
 
 # Initialize speed
 current_speed = 10  # Default speed
+piPWM_freq = 8000
 
 # Setup GPIO
 lgpio.gpio_claim_output(BTS7960, pin_LEN)
@@ -53,13 +54,13 @@ lgpio.gpio_write(BTS7960, pin_LPWM2, 0)
 lgpio.gpio_write(BTS7960, pin_RPWM2, 0)
 
 # Enabling Motors
-lgpio.tx_pwm(BTS7960, pin_LPWM, 1000, 0)
-lgpio.tx_pwm(BTS7960, pin_RPWM, 100, 0)
+lgpio.tx_pwm(BTS7960, pin_LPWM, piPWM_freq, 0)
+lgpio.tx_pwm(BTS7960, pin_RPWM, piPWM_freq, 0)
 lgpio.gpio_write(BTS7960, pin_LEN, 1)
 # lgpio.gpio_write(BTS7960, pin_REN, 1)
 
-lgpio.tx_pwm(BTS7960, pin_LPWM2, 1000, 0)
-lgpio.tx_pwm(BTS7960, pin_RPWM2, 100, 0)
+lgpio.tx_pwm(BTS7960, pin_LPWM2, piPWM_freq, 0)
+lgpio.tx_pwm(BTS7960, pin_RPWM2, piPWM_freq, 0)
 lgpio.gpio_write(BTS7960, pin_LEN2, 1)
 # lgpio.gpio_write(BTS7960, pin_REN2, 1)
 

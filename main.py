@@ -3,6 +3,7 @@ import GyrometerMPU6050 as gyNan
 import MotorInterface as gyMotor
 
 thetaPID = PID.PIDController(100,0,5)
+linePID = PID.PIDController(100,0,5)
 mpu = gyNan.MPU_init(0x69)
 
 # Main lobby
@@ -41,16 +42,20 @@ try:
         Gy = gyNan.read_raw_data(gyNan.GYRO_YOUT_H)/131.0
         Gz = gyNan.read_raw_data(gyNan.GYRO_ZOUT_H)/131.0
 
-        print ("Gx=%.2f" %Gx, u'\u00b0'+ "/s", "\tGy=%.2f" %Gy, u'\u00b0'+ "/s", "\tGz=%.2f" %Gz, u'\u00b0'+ "/s", "\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az) 	
+        # print ("Gx=%.2f" %Gx, u'\u00b0'+ "/s", "\tGy=%.2f" %Gy, u'\u00b0'+ "/s", "\tGz=%.2f" %Gz, u'\u00b0'+ "/s", "\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az) 	
         gyNan.time.sleep(.1)
 
         for event in gyMotor.pygame.event.get():
             if event.type == gyMotor.pygame.QUIT:
                 running = False
             elif event.type == gyMotor.pygame.KEYDOWN:
-                # outp = thetaPID.compute(0, Gz)
-                # if outp < 0 : # if negative, robot must turn ccw
-                #     gyMotor.move_robot('right',outp * current_speed)  #this s because output ranges from -1 to 1 due to complex numbers vector range
+                
+                if event.key == gyMotor.pygame.K_b:
+                    outp = thetaPID.compute(0, Gz) * 0.98 + thetaPID.compute(0,Ax) * 0.01 + thetaPID.compute(0,Ay) * 0.01
+                    if outp < 0 : # if negative, robot must turn ccw
+                        gyMotor.move_robot('right',outp * gyMotor.current_speed)  #this s because output ranges from -1 to 1 due to complex numbers vector range
+                    elif outp > 0 :
+                        gyMotor.move_robot('left',outp * gyMotor.current_speed)
 
                 if event.key == gyMotor.pygame.K_UP:
                     gyMotor.move_robot('forward', gyMotor.current_speed)
