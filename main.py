@@ -2,7 +2,7 @@ import PID
 import GyrometerMPU6050 as gyNan
 import MotorInterface as gyMotor
 
-thetaPID = PID.PIDController(1,0,0)
+thetaPID = PID.PIDController(100,0,0)
 linePID = PID.PIDController(100,0,5)
 mpu = gyNan.MPU_init(0x69)
 
@@ -32,10 +32,10 @@ try:
                 if event.key == gyMotor.pygame.K_b:
                     outp = thetaPID.compute(0, Gz) * 0.98 + thetaPID.compute(0,Ax) * 0.01 + thetaPID.compute(0,Ay) * 0.01
                     print("Gz - 0 = ",Gz,"output PID = ", int(outp * gyMotor.current_speed))
-                    # if outp < 0 : # if negative, robot must turn ccw
-                    #     gyMotor.move_robot('right',outp)  #this is because output ranges from -1 to 1 due to complex numbers vector range
-                    # elif outp > 0 :
-                    #     gyMotor.move_robot('left',outp)
+                    if outp < 0 : # if negative, robot must turn ccw
+                        gyMotor.move_robot('right',100)  #this is because output ranges from -1 to 1 due to complex numbers vector range
+                    elif outp > 0 :
+                        gyMotor.move_robot('lsft',100)
 
                 if event.key == gyMotor.pygame.K_UP:
                     gyMotor.move_robot('forward', gyMotor.current_speed)
