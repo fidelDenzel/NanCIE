@@ -48,30 +48,30 @@ try:
             if event.type == gyMotor.pygame.QUIT:
                 running = False
             elif event.type == gyMotor.pygame.KEYDOWN:
-                outp = thetaPID.compute(0, Gz)
-                if outp < 0 : # if negative, robot must turn ccw
-                    gyMotor.move_robot('right',outp * current_speed)  #this s because output ranges from -1 to 1 due to complex numbers vector range
+                # outp = thetaPID.compute(0, Gz)
+                # if outp < 0 : # if negative, robot must turn ccw
+                #     gyMotor.move_robot('right',outp * current_speed)  #this s because output ranges from -1 to 1 due to complex numbers vector range
 
                 if event.key == gyMotor.pygame.K_UP:
-                    gyMotor.move_robot('forward', current_speed)
+                    gyMotor.move_robot('forward', gyMotor.current_speed)
                 
                 elif event.key == gyMotor.pygame.K_DOWN:
-                    gyMotor.move_robot('backward', current_speed)
+                    gyMotor.move_robot('backward', gyMotor.current_speed)
                 
                 elif event.key == gyMotor.pygame.K_LEFT:
-                    gyMotor.move_robot('left', current_speed)
+                    gyMotor.move_robot('left', gyMotor.current_speed)
                 
                 elif event.key == gyMotor.pygame.K_RIGHT:
-                    gyMotor.move_robot('right', current_speed)
+                    gyMotor.move_robot('right', gyMotor.current_speed)
                 
                 elif event.key == gyMotor.pygame.K_RETURN:
-                    gyMotor.move_robot('spin', current_speed)    
+                    gyMotor.move_robot('spin', gyMotor.current_speed)    
                 
                 elif event.key >= 48 and event.key <= 57:
-                    current_speed = (event.key - 48 ) * 10
-                    if current_speed == 0:
-                        current_speed = 100
-                    print("Speed @" + str(current_speed) + " %")
+                    gyMotor.current_speed = (event.key - 48 ) * 10
+                    if gyMotor.current_speed == 0:
+                        gyMotor.current_speed = 100
+                    print("Speed @" + str(gyMotor.current_speed) + " %")
 
             elif event.type == gyMotor.pygame.KEYUP:
                 gyMotor.stop_robot()

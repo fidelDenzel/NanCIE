@@ -19,47 +19,49 @@ max_v = max_omega * wheel_r
 
 # Motor Pins
 pin_LEN = 22
-pin_REN = 4
+# pin_REN = 
 pin_LPWM = 27
 pin_RPWM = 17
-pin_LEN2 = 16
-pin_REN2 = 6
-pin_LPWM2 = 26
-pin_RPWM2 = 13
+
+pin_LEN2 = 26
+# pin_REN2 = 
+pin_LPWM2 = 6
+pin_RPWM2 = 5
 
 # Initialize speed
 current_speed = 10  # Default speed
 
 # Setup GPIO
 lgpio.gpio_claim_output(BTS7960, pin_LEN)
-lgpio.gpio_claim_output(BTS7960, pin_REN)
+# lgpio.gpio_claim_output(BTS7960, pin_REN)
 lgpio.gpio_claim_output(BTS7960, pin_LPWM)
 lgpio.gpio_claim_output(BTS7960, pin_RPWM)
 lgpio.gpio_claim_output(BTS7960, pin_LEN2)
-lgpio.gpio_claim_output(BTS7960, pin_REN2)
+# lgpio.gpio_claim_output(BTS7960, pin_REN2)
 lgpio.gpio_claim_output(BTS7960, pin_LPWM2)
 lgpio.gpio_claim_output(BTS7960, pin_RPWM2)
 
 # Initialization
 lgpio.gpio_write(BTS7960, pin_LEN, 0)
-lgpio.gpio_write(BTS7960, pin_REN, 0)
+# lgpio.gpio_write(BTS7960, pin_REN, 0)
 lgpio.gpio_write(BTS7960, pin_LPWM, 0)
 lgpio.gpio_write(BTS7960, pin_RPWM, 0)
+
 lgpio.gpio_write(BTS7960, pin_LEN2, 0)
-lgpio.gpio_write(BTS7960, pin_REN2, 0)
+# lgpio.gpio_write(BTS7960, pin_REN2, 0)
 lgpio.gpio_write(BTS7960, pin_LPWM2, 0)
 lgpio.gpio_write(BTS7960, pin_RPWM2, 0)
 
 # Enabling Motors
-lgpio.tx_pwm(BTS7960, pin_LPWM, 100, 0)
-lgpio.tx_pwm(BTS7960, pin_RPWM, 200, 0)
+lgpio.tx_pwm(BTS7960, pin_LPWM, 1000, 0)
+lgpio.tx_pwm(BTS7960, pin_RPWM, 100, 0)
 lgpio.gpio_write(BTS7960, pin_LEN, 1)
-lgpio.gpio_write(BTS7960, pin_REN, 1)
+# lgpio.gpio_write(BTS7960, pin_REN, 1)
 
-lgpio.tx_pwm(BTS7960, pin_LPWM2, 100, 0)
-lgpio.tx_pwm(BTS7960, pin_RPWM2, 200, 0)
+lgpio.tx_pwm(BTS7960, pin_LPWM2, 1000, 0)
+lgpio.tx_pwm(BTS7960, pin_RPWM2, 100, 0)
 lgpio.gpio_write(BTS7960, pin_LEN2, 1)
-lgpio.gpio_write(BTS7960, pin_REN2, 1)
+# lgpio.gpio_write(BTS7960, pin_REN2, 1)
 
 # Initialize speed adjustments
 motor1_speed_adjustment = 1.0  # Adjustment factor for Motor 1
