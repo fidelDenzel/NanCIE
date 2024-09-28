@@ -12,7 +12,6 @@ screen = pygame.display.set_mode((100, 100))
 
 # Initialize GPIO
 BTS7960 = lgpio.gpiochip_open(0)
-FREQ = 100
 max_omega = (1/0.03) * 2 * math.pi # radiant per second
 wheel_r = 0.1
 max_v = max_omega * wheel_r
@@ -30,6 +29,7 @@ pin_RPWM2 = 5
 
 # Initialize speed
 current_speed = 10  # Default speed
+FREQ = 5000
 piPWM_freq = 5000
 
 # Setup GPIO
@@ -54,13 +54,13 @@ lgpio.gpio_write(BTS7960, pin_LPWM2, 0)
 lgpio.gpio_write(BTS7960, pin_RPWM2, 0)
 
 # Enabling Motors
-lgpio.tx_pwm(BTS7960, pin_LPWM, piPWM_freq, 0)
-lgpio.tx_pwm(BTS7960, pin_RPWM, piPWM_freq, 0)
+lgpio.tx_pwm(BTS7960, pin_LPWM, FREQ, 0)
+lgpio.tx_pwm(BTS7960, pin_RPWM, FREQ, 0)
 lgpio.gpio_write(BTS7960, pin_LEN, 1)
 # lgpio.gpio_write(BTS7960, pin_REN, 1)
 
-lgpio.tx_pwm(BTS7960, pin_LPWM2, piPWM_freq, 0)
-lgpio.tx_pwm(BTS7960, pin_RPWM2, piPWM_freq, 0)
+lgpio.tx_pwm(BTS7960, pin_LPWM2, FREQ, 0)
+lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, 0)
 lgpio.gpio_write(BTS7960, pin_LEN2, 1)
 # lgpio.gpio_write(BTS7960, pin_REN2, 1)
 
