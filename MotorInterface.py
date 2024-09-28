@@ -29,8 +29,8 @@ pin_RPWM2 = 5
 
 # Initialize speed
 current_speed = 10  # Default speed
-FREQ = 5000
-piPWM_freq = 5000
+FREQ = 100
+# piPWM_freq = 5000
 
 # Setup GPIO
 lgpio.gpio_claim_output(BTS7960, pin_LEN)

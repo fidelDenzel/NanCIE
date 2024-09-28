@@ -27,10 +27,33 @@ try:
 
         Gz_sample.append(Gz)
 
-    print(stat.mean(Gz_sample), "\n", Gz_sample, "\n", stat.stdev(Gz_sample))
+    print("Mean = ", stat.mean(Gz_sample), "\n", "St. Dev = ", stat.stdev(Gz_sample))
 
     gyMotor.running = True
     while gyMotor.running:
+
+        #Read Accelerometer raw value
+        Ax = gyNan.read_raw_data(gyNan.ACCEL_XOUT_H)/16384.0
+        Ay = gyNan.read_raw_data(gyNan.ACCEL_YOUT_H)/16384.0
+        Az = gyNan.read_raw_data(gyNan.ACCEL_ZOUT_H)/16384.0
+
+        #Read Gyroscope raw value
+        Gx = gyNan.read_raw_data(gyNan.GYRO_XOUT_H)/131.0
+        Gy = gyNan.read_raw_data(gyNan.GYRO_YOUT_H)/131.0
+        Gz = gyNan.read_raw_data(gyNan.GYRO_ZOUT_H)/131.0
+        gyNan.time.sleep(.1)
+
+        outpid = thetaPID.compute(stat.stdev(Gz_sample), Gz) * 1 #+ thetaPID.compute(0,Ax) * 0.01 + thetaPID.compute(0,Ay) * 0.01
+        print("Gz - 0 = ",Gz - stat.stdev(Gz_sample),"| output PID = ", (outpid))
+        outpid = outpid/1.5 * 100.0
+        if outpid > 100.0:
+            output = 100.0
+
+        if outpid < -1 * 0.1 : # if negative, robot must turn ccw
+            outpid = abs(outpid)
+            gyMotor.move_robot('right',int(outpid))  #this is because output ranges from -1 to 1 due to complex numbers vector range
+        elif outpid > 0.1:
+            gyMotor.move_robot('left',int(outpid))
 
         for event in gyMotor.pygame.event.get():
 
