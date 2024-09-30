@@ -65,8 +65,8 @@ lgpio.gpio_write(BTS7960, pin_LEN2, 1)
 # lgpio.gpio_write(BTS7960, pin_REN2, 1)
 
 # Initialize speed adjustments
-motor1_speed_adjustment = 1.0  # Adjustment factor for Motor 1
-motor2_speed_adjustment = 1.0 # Adjustment factor for Motor 2
+motor1_speed_adjustment = 1  # Adjustment factor for Motor 1
+motor2_speed_adjustment = 1 # Adjustment factor for Motor 2
 
 # Function to stop the robot
 def stop_robot():
