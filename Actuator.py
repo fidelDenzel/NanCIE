@@ -1,20 +1,11 @@
-import pygame
+
 import lgpio
 import math
-import time
 
 
-# Initialize Pygame
-pygame.init()
-
-# Set up the display
-screen = pygame.display.set_mode((100, 100))
-
-# Initialize GPIO
-BTS7960 = lgpio.gpiochip_open(0)
 max_omega = (1/0.03) * 2 * math.pi # radiant per second
 wheel_r = 0.1
-max_v = max_omega * wheel_r
+max_v = 1.5 #m/s
 
 # Motor Pins
 pin_LEN = 22
@@ -29,44 +20,48 @@ pin_RPWM2 = 5
 
 # Initialize speed
 current_speed = 10  # Default speed
-FREQ = 100
-# piPWM_freq = 5000
-
-# Setup GPIO
-lgpio.gpio_claim_output(BTS7960, pin_LEN)
-# lgpio.gpio_claim_output(BTS7960, pin_REN)
-lgpio.gpio_claim_output(BTS7960, pin_LPWM)
-lgpio.gpio_claim_output(BTS7960, pin_RPWM)
-lgpio.gpio_claim_output(BTS7960, pin_LEN2)
-# lgpio.gpio_claim_output(BTS7960, pin_REN2)
-lgpio.gpio_claim_output(BTS7960, pin_LPWM2)
-lgpio.gpio_claim_output(BTS7960, pin_RPWM2)
-
-# Initialization
-lgpio.gpio_write(BTS7960, pin_LEN, 0)
-# lgpio.gpio_write(BTS7960, pin_REN, 0)
-lgpio.gpio_write(BTS7960, pin_LPWM, 0)
-lgpio.gpio_write(BTS7960, pin_RPWM, 0)
-
-lgpio.gpio_write(BTS7960, pin_LEN2, 0)
-# lgpio.gpio_write(BTS7960, pin_REN2, 0)
-lgpio.gpio_write(BTS7960, pin_LPWM2, 0)
-lgpio.gpio_write(BTS7960, pin_RPWM2, 0)
-
-# Enabling Motors
-lgpio.tx_pwm(BTS7960, pin_LPWM, FREQ, 0)
-lgpio.tx_pwm(BTS7960, pin_RPWM, FREQ, 0)
-lgpio.gpio_write(BTS7960, pin_LEN, 1)
-# lgpio.gpio_write(BTS7960, pin_REN, 1)
-
-lgpio.tx_pwm(BTS7960, pin_LPWM2, FREQ, 0)
-lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, 0)
-lgpio.gpio_write(BTS7960, pin_LEN2, 1)
-# lgpio.gpio_write(BTS7960, pin_REN2, 1)
+FREQ = 100 #0 - 8k Hz
 
 # Initialize speed adjustments
 motor1_speed_adjustment = 1  # Adjustment factor for Motor 1
 motor2_speed_adjustment = 1 # Adjustment factor for Motor 2
+BTS7960 = any
+
+# Setup GPIO
+def __init__():
+    global BTS7960
+    # Initialize GPIO
+    BTS7960 = lgpio.gpiochip_open(0)
+    lgpio.gpio_claim_output(BTS7960, pin_LEN)
+    # lgpio.gpio_claim_output(BTS7960, pin_REN)
+    lgpio.gpio_claim_output(BTS7960, pin_LPWM)
+    lgpio.gpio_claim_output(BTS7960, pin_RPWM)
+    lgpio.gpio_claim_output(BTS7960, pin_LEN2)
+    # lgpio.gpio_claim_output(BTS7960, pin_REN2)
+    lgpio.gpio_claim_output(BTS7960, pin_LPWM2)
+    lgpio.gpio_claim_output(BTS7960, pin_RPWM2)
+
+    # Initialization
+    lgpio.gpio_write(BTS7960, pin_LEN, 0)
+    # lgpio.gpio_write(BTS7960, pin_REN, 0)
+    lgpio.gpio_write(BTS7960, pin_LPWM, 0)
+    lgpio.gpio_write(BTS7960, pin_RPWM, 0)
+
+    lgpio.gpio_write(BTS7960, pin_LEN2, 0)
+    # lgpio.gpio_write(BTS7960, pin_REN2, 0)
+    lgpio.gpio_write(BTS7960, pin_LPWM2, 0)
+    lgpio.gpio_write(BTS7960, pin_RPWM2, 0)
+
+    # Enabling Motors
+    lgpio.tx_pwm(BTS7960, pin_LPWM, FREQ, 0)
+    lgpio.tx_pwm(BTS7960, pin_RPWM, FREQ, 0)
+    lgpio.gpio_write(BTS7960, pin_LEN, 1)
+    # lgpio.gpio_write(BTS7960, pin_REN, 1)
+
+    lgpio.tx_pwm(BTS7960, pin_LPWM2, FREQ, 0)
+    lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, 0)
+    lgpio.gpio_write(BTS7960, pin_LEN2, 1)
+    # lgpio.gpio_write(BTS7960, pin_REN2, 1)
 
 # Function to stop the robot
 def stop_robot():
@@ -127,4 +122,3 @@ def move_robot(direction, speed):
         print("360 Dance Move at", (speed/100) * max_v, "m/s")
         lgpio.tx_pwm(BTS7960, pin_RPWM2, FREQ, motor2_speed) 
         lgpio.tx_pwm(BTS7960, pin_RPWM, FREQ, motor1_speed)   
-
