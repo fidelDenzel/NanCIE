@@ -1,43 +1,65 @@
-import PID
-import GyrometerMPU6050 as gyNan
-import MotorInterface as gyMotor
-import statistics as stat
-import time
+#!/usr/bin/python3
 
-thetaPID = PID.PIDController(1,0,0)
-linePID = PID.PIDController(0,0,0)
-mpu = gyNan.MPU_init(0x69)
+import pygame
+import Actuator as nanA
 
-Gz_sample = []
+# Initialize Pygame
+pygame.init()
 
-try:
+# Set up the display
+screen = pygame.display.set_mode((100, 100))
 
-    for i in range(0,10):
-        #Read Accelerometer raw value
-        Ax = gyNan.read_raw_data(gyNan.ACCEL_XOUT_H)/16384.0
-        Ay = gyNan.read_raw_data(gyNan.ACCEL_YOUT_H)/16384.0
-        Az = gyNan.read_raw_data(gyNan.ACCEL_ZOUT_H)/16384.0
+def main():
 
-        #Read Gyroscope raw value
-        Gx = gyNan.read_raw_data(gyNan.GYRO_XOUT_H)/131.0
-        Gy = gyNan.read_raw_data(gyNan.GYRO_YOUT_H)/131.0
-        Gz = gyNan.read_raw_data(gyNan.GYRO_ZOUT_H)/131.0
+    try:
+        running = True
+        while running:
 
-        gyNan.time.sleep(.1)
+            for event in nanA.pygame.event.get():
 
-        Gz_sample.append(Gz)
+                if event.type == nanA.pygame.QUIT:
+                    running = False
+                elif event.type == nanA.pygame.KEYDOWN:
 
-    print("Mean = ", stat.mean(Gz_sample), "\n", "St. Dev = ", stat.stdev(Gz_sample))
+                    if event.key == nanA.pygame.K_UP:
+                        nanA.move_robot('forward', nanA.current_speed)
+                    
+                    elif event.key == nanA.pygame.K_DOWN:
+                        nanA.move_robot('backward', nanA.current_speed)
+                    
+                    elif event.key == nanA.pygame.K_LEFT:
+                        nanA.move_robot('left', nanA.current_speed)
+                    
+                    elif event.key == nanA.pygame.K_RIGHT:
+                        nanA.move_robot('right', nanA.current_speed)
+                    
+                    elif event.key == nanA.pygame.K_RETURN:
+                        nanA.move_robot('spin', nanA.current_speed)    
+                    
+                    elif event.key >= 48 and event.key <= 57:
+                        nanA.current_speed = (event.key - 48 ) * 10
+                        if nanA.current_speed == 0:
+                            nanA.current_speed = 100
+                        print("Speed @" + str(nanA.current_speed) + " %")
+                    elif event.key == nanA.pygame.K_PERIOD:
+                        running = False
 
-    gyMotor.running = True
-    while gyMotor.running:
+                elif event.type == nanA.pygame.KEYUP:
+                    nanA.stop_robot()
 
-        for event in gyMotor.pygame.event.get():
+            nanA.time.sleep(0.1)  # To avoid high CPU usage
 
-            if event.type == gyMotor.pygame.QUIT:
-                running = False
-            elif event.type == gyMotor.pygame.KEYDOWN:
+    finally:
+        print("Ending\n")
+        nanA.stop_robot()
+        nanA.lgpio.gpio_write(nanA.BTS7960, nanA.pin_LEN, 0)
+        # nanA.lgpio.gpio_write(nanA.BTS7960, nanA.pin_REN, 0)
+        nanA.lgpio.gpio_write(nanA.BTS7960, nanA.pin_LEN2, 0)
+        # nanA.lgpio.gpio_write(nanA.BTS7960, nanA.pin_REN2, 0)
+        nanA.lgpio.gpiochip_close(nanA.BTS7960)
+        nanA.pygame.quit()
 
+<<<<<<< HEAD
                 if event.key == gyMotor.pygame.K_UP:
                     gyMotor.move_robot('forward', gyMotor.current_speed)
                 
@@ -105,3 +127,7 @@ finally:
     # gyMotor.lgpio.gpio_write(gyMotor.BTS7960, gyMotor.pin_REN2, 0)
     gyMotor.lgpio.gpiochip_close(gyMotor.BTS7960)
     gyMotor.pygame.quit()
+=======
+if __name__ == "__main__":
+    main()
+>>>>>>> refs/remotes/origin/master
