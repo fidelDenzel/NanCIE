@@ -18,7 +18,7 @@ GYRO_XOUT_H  = 0x43
 GYRO_YOUT_H  = 0x45
 GYRO_ZOUT_H  = 0x47
 
-def MPU_init(slaveAddr = 0x68):
+def MPU_init(slaveAddr = 0x69):
 	global Device_Address
 
 	Device_Address = slaveAddr
@@ -53,21 +53,21 @@ def read_raw_data(addr):
 	return value
 
 # Function to calibrate the MPU6050
-def calibrate_mpu6050(bus, num_samples=1000):
+def calibrate_mpu6050(num_samples=1000):
     print("Calibrating MPU6050... Please ensure the device is stationary.")
     accel_offsets = {'x':0, 'y':0, 'z':0}
     gyro_offsets = {'x':0, 'y':0, 'z':0}
     
     for _ in range(num_samples):
         # Read raw accelerometer data
-        acc_x = read_raw_data(bus, 0x3B)
-        acc_y = read_raw_data(bus, 0x3D)
-        acc_z = read_raw_data(bus, 0x3F)
+        acc_x = read_raw_data(0x3B)
+        acc_y = read_raw_data(0x3D)
+        acc_z = read_raw_data(0x3F)
         
         # Read raw gyroscope data
-        gyro_x = read_raw_data(bus, 0x43)
-        gyro_y = read_raw_data(bus, 0x45)
-        gyro_z = read_raw_data(bus, 0x47)
+        gyro_x = read_raw_data(0x43)
+        gyro_y = read_raw_data(0x45)
+        gyro_z = read_raw_data(0x47)
         
         accel_offsets['x'] += acc_x
         accel_offsets['y'] += acc_y
@@ -89,16 +89,11 @@ def calibrate_mpu6050(bus, num_samples=1000):
     
     return accel_offsets, gyro_offsets
 
-def complementary_filter(gyro_value, accel_value, alpha = 0.98, dt = 0.1):
-	start_time = time.time()
+def complementary_filter(gyro_value, accel_value, dt, alpha = 0.98, value = 0.0):
 	
 	value += gyro_value * dt
 	value = alpha * value + (1 - alpha) * accel_value
-	elapsed_time = time.time() - start_time
-	time_to_sleep = dt - elapsed_time
-	
-	if time_to_sleep > 0:
-		time.sleep(time_to_sleep)
+
 	return value
 
 # Function to calculate accelerometer angles
