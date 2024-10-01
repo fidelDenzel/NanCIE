@@ -62,37 +62,37 @@ try:
             elif event.type == gyMotor.pygame.KEYUP:
                 gyMotor.stop_robot()
 
-        #Read Accelerometer raw value
-        Ax = gyNan.read_raw_data(gyNan.ACCEL_XOUT_H)/16384.0
-        Ay = gyNan.read_raw_data(gyNan.ACCEL_YOUT_H)/16384.0
-        Az = gyNan.read_raw_data(gyNan.ACCEL_ZOUT_H)/16384.0
+        # #Read Accelerometer raw value
+        # Ax = gyNan.read_raw_data(gyNan.ACCEL_XOUT_H)/16384.0
+        # Ay = gyNan.read_raw_data(gyNan.ACCEL_YOUT_H)/16384.0
+        # Az = gyNan.read_raw_data(gyNan.ACCEL_ZOUT_H)/16384.0
 
-        #Read Gyroscope raw value
-        Gx = gyNan.read_raw_data(gyNan.GYRO_XOUT_H)/131.0
-        Gy = gyNan.read_raw_data(gyNan.GYRO_YOUT_H)/131.0
-        Gz = gyNan.read_raw_data(gyNan.GYRO_ZOUT_H)/131.0
-        gyNan.time.sleep(.1)
+        # #Read Gyroscope raw value
+        # Gx = gyNan.read_raw_data(gyNan.GYRO_XOUT_H)/131.0
+        # Gy = gyNan.read_raw_data(gyNan.GYRO_YOUT_H)/131.0
+        # Gz = gyNan.read_raw_data(gyNan.GYRO_ZOUT_H)/131.0
+        # gyNan.time.sleep(.1)
 
-        outpid = thetaPID.compute(stat.stdev(Gz_sample), Gz) * 1 # + thetaPID.compute(0,Ax) * 0.01 + thetaPID.compute(0,Ay) * 0.01
+        # outpid = thetaPID.compute(stat.stdev(Gz_sample), Gz) * 1 # + thetaPID.compute(0,Ax) * 0.01 + thetaPID.compute(0,Ay) * 0.01
         
-        outpid = outpid/1.5 * 100.0
-        outpid_lim = 10.0
-        if outpid > outpid_lim:
-            output = outpid_lim
-        elif outpid < -outpid_lim:
-            outpid = -outpid_lim
+        # outpid = outpid/1.5 * 100.0
+        # outpid_lim = 10.0
+        # if outpid > outpid_lim:
+        #     output = outpid_lim
+        # elif outpid < -outpid_lim:
+        #     outpid = -outpid_lim
 
-        print("Gz - 0 = ",Gz - stat.stdev(Gz_sample),"| output PID = ", (outpid))
+        # print("Gz - 0 = ",Gz - stat.stdev(Gz_sample),"| output PID = ", (outpid))
 
-        error_th = 7.0
-        if outpid < -1 * error_th : # if negative, robot must turn ccw
-            outpid = abs(outpid)
-            gyMotor.move_robot('right',outpid)  #this is because output ranges from -1 to 1 due to complex numbers vector range
-        elif outpid > error_th:
-            gyMotor.move_robot('left',10)
-        else:
-            gyMotor.move_robot('right',0)
-            gyMotor.move_robot('left',0)
+        # error_th = 7.0
+        # if outpid < -1 * error_th : # if negative, robot must turn ccw
+        #     outpid = abs(outpid)
+        #     gyMotor.move_robot('right',outpid)  #this is because output ranges from -1 to 1 due to complex numbers vector range
+        # elif outpid > error_th:
+        #     gyMotor.move_robot('left',10)
+        # else:
+        #     gyMotor.move_robot('right',0)
+        #     gyMotor.move_robot('left',0)
 
         gyMotor.time.sleep(0.1)  # To avoid high CPU usage
 
