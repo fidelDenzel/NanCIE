@@ -94,11 +94,11 @@ def main():
             
             elapsed_time = time.time() - start_time
             time_to_sleep = dt - elapsed_time
-            # print(time_to_sleep)
+            print(time_to_sleep)
             time.sleep(0.1)
             
-            # if time_to_sleep > 0:
-            #     time.sleep(time_to_sleep)
+            if time_to_sleep > 0:
+                time.sleep(time_to_sleep)
 
     finally:
         nanA.end_robot()
